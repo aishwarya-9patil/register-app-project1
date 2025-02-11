@@ -52,6 +52,19 @@ pipeline {
             }
         }
 
+        stage("Test JENKINS_API_TOKEN") {
+            steps {
+                echo "JENKINS_API_TOKEN: ${JENKINS_API_TOKEN}"  // Ensure the token is being fetched
+            }
+        }
+
+        stage("Test Docker Credentials") {
+            steps {
+                echo "Docker Username: ${DOCKER_USER}"
+                // The password won't be exposed, but you can check the username
+            }
+        }
+
         stage("Build & Push Docker Image") {
             steps {
                 script {
@@ -72,6 +85,3 @@ pipeline {
         // Add any additional stages here (like Test, Deploy, etc.)
     }
 }
-
-
-       
