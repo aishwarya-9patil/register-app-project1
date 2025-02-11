@@ -1,4 +1,4 @@
-           Jenkins file open add docker stage
+           
 
 pipeline {
     agent { label 'Jenkins-Agent' }
