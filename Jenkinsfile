@@ -1,4 +1,6 @@
 pipeline {
+    agent any  // This tells Jenkins to run the pipeline on any available agent
+
     environment {
         APP_NAME = "register-app-pipeline"
         RELEASE = "1.0.0"
