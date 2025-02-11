@@ -72,6 +72,31 @@ pipeline {
             }
         }
 
-        // Additional stages can go here (e.g., Test, Deploy, etc.)
+        // Trivy Scan stage
+        stage("Trivy Scan") {
+            steps {
+                script {
+                    // Use the IMAGE_NAME variable for scanning the Docker image
+                    sh """
+                    docker run -v /var/run/docker.sock:/var/run/docker.sock \
+                    aquasec/trivy image ${IMAGE_NAME}:latest \
+                    --no-progress --scanners vuln --exit-code 0 \
+                    --severity HIGH,CRITICAL --format table
+                    """
+                }
+            }
+        }
+
+        // Cleanup Artifacts stage
+        stage ('Cleanup Artifacts') {
+            steps {
+                script {
+                    sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker rmi ${IMAGE_NAME}:latest"
+                }
+            }
+        }
     }
 }
+
+
