@@ -11,7 +11,7 @@ pipeline {
         APP_NAME = "register-app-pipeline"
         RELEASE = "1.0.0"
         DOCKER_USER = "aishwarya0909"
-        DOCKER_PASS = credentials('dockerhub')  // Ensure Docker credentials are properly set in Jenkins
+        DOCKER_PASS = credentials('Jenkins-pipeline-token')  // Ensure Docker credentials are properly set in Jenkins
         IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
         JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
