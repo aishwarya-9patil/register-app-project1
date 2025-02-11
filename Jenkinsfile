@@ -1,4 +1,6 @@
-           pipeline {
+           Jenkins file open add docker stage
+
+pipeline {
     agent { label 'Jenkins-Agent' }
     tools {
         jdk 'Java17'
@@ -52,40 +54,19 @@
             }
         }
 
-        stage("Test JENKINS_API_TOKEN") {
-            steps {
-                script {
-                    // Check if the token is available
-                    if (env.JENKINS_API_TOKEN) {
-                        echo "JENKINS_API_TOKEN is available."
-                    } else {
-                        error "JENKINS_API_TOKEN is NOT available."
-                    }
-                }
-            }
-        }
-
-        stage("Test Docker Credentials") {
-            steps {
-                script {
-                    echo "Docker Username: ${DOCKER_USER}"
-                    // The password won't be exposed, but you can check the username
-                }
-            }
-        }
-
         stage("Build & Push Docker Image") {
             steps {
                 script {
-                    // Login to Docker registry first
-                    docker.login(user: "${DOCKER_USER}", password: "${DOCKER_PASS}")
-
                     // Build Docker image
-                    docker_image = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+                    docker.withRegistry('', DOCKER_PASS) {
+                        docker_image = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+                    }
 
                     // Push Docker image to Docker registry
-                    docker_image.push("${IMAGE_TAG}")
-                    docker_image.push('latest')
+                    docker.withRegistry('', DOCKER_PASS) {
+                        docker_image.push("${IMAGE_TAG}")
+                        docker_image.push('latest')
+                    }
                 }
             }
         }
